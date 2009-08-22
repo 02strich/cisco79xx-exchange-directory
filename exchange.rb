@@ -38,6 +38,13 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
       distFolderId.xmlattr_Id = SOAP::SOAPString.new('contacts')
       parentFolderIds = NonEmptyArrayOfBaseFolderIdsType.new([], [distFolderId])
       
+      #fieldOrderPath = PathToUnindexedFieldType.new()
+      #fieldOrderPath.xmlattr_FieldURI = SOAP::SOAPString.new('contacts:Surname')
+      #fieldOrder = FieldOrderType.new(fieldOrderPath)
+      #fieldOrder.xmlattr_Order = SOAP::SOAPString.new('Ascending')
+      #sortOrder = [fieldOrder]
+      
+      #findItemRequest = FindItemType.new(itemShape, nil, nil, nil, nil, nil, nil, nil, sortOrder, parentFolderIds)
       findItemRequest = FindItemType.new(itemShape, nil, nil, nil, nil, nil, nil, nil, nil, parentFolderIds)
       findItemRequest.xmlattr_Traversal = SOAP::SOAPString.new('Shallow')
       response = driver.findItem(findItemRequest)
