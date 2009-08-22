@@ -19,7 +19,14 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
   
   def process(request, response)
     response.start(200) do |head,out|
-      head["Content-Type"] = "text/plain"
+      page = request.params["REQUEST_PATH"]
+      page.slice!(0)
+      page = page.to_i
+
+      head["Content-Type"] = "text/xml"
+      head["Connection"] = "close"
+      head["Expires"] = "-1"
+      head["Refresh"] = "0; url=http://192.168.178.15:3000/" + (page+1).to_s
       
       driver = ExchangeServicePortType.new(@endpoint) 
       #driver.wiredump_dev = STDERR 
@@ -39,6 +46,7 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
       out.write "\t<Title>Directory title goes here</Title>\n" 
       out.write "\t<Prompt>Prompt text goes here</Prompt>\n"
       
+      count = 0
       response.responseMessages.findItemResponseMessage[0].rootFolder.items.contact.each do |contact|
         next unless contact.completeName
         next unless contact.phoneNumbers
@@ -46,11 +54,16 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
         contact.phoneNumbers.each do |phone|
           next if phone.to_s.empty?
           
+          count += 1 
+          next if count < 32*page
           out.write "\t<DirectoryEntry>\n"
           out.write "\t\t<Name>"+ contact.completeName.fullName + "(" + phone.xmlattr_Key + ")" + "</Name>\n"
           out.write "\t\t<Telephone>" + phone + "</Telephone>\n"
           out.write "\t</DirectoryEntry>\n"
+
+         break if count == 32*(page+1)
         end
+        break if count == 32*(page+1)
       end
       
       out.write "</CiscoIPPhoneDirectory>"
