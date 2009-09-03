@@ -58,20 +58,27 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
         next unless contact.completeName
         next unless contact.phoneNumbers
         next unless contact.phoneNumbers.size > 0
+
+        contact_name = contact.completeName.fullName
+        contact_name.sub!("ä","ae")
+        contact_name.sub!("ö","oe")
+        contact_name.sub!("ü","ue") 
+
         contact.phoneNumbers.each do |phone|
           next if phone.to_s.empty?
           
           count += 1 
           next if count < 32*page
 		  
-		  # normalization
-		  phone_number = phone.to_s
-		  phone_number.sub!("(","")
-		  phone_number.sub!("+","00")
-		  phone_number.sub!(" ","")
+         # normalization
+         phone_number = phone.to_s
+         phone_number.sub!("(","")
+         phone_number.sub!(")","")
+         phone_number.sub!("+","00")
+         phone_number.sub!(" ","")
 		  
           out.write "\t<DirectoryEntry>\n"
-          out.write "\t\t<Name>"+ contact.completeName.fullName + "(" + phone.xmlattr_Key + ")" + "</Name>\n"
+          out.write "\t\t<Name>"+ contact_name + " (" + phone.xmlattr_Key + ")" + "</Name>\n"
           out.write "\t\t<Telephone>" + phone_number + "</Telephone>\n"
           out.write "\t</DirectoryEntry>\n"
 
