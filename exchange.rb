@@ -63,9 +63,16 @@ class ExchangeContactsHandler < Mongrel::HttpHandler
           
           count += 1 
           next if count < 32*page
+		  
+		  # normalization
+		  phone_number = phone.to_s
+		  phone_number.sub!("(","")
+		  phone_number.sub!("+","00")
+		  phone_number.sub!(" ","")
+		  
           out.write "\t<DirectoryEntry>\n"
           out.write "\t\t<Name>"+ contact.completeName.fullName + "(" + phone.xmlattr_Key + ")" + "</Name>\n"
-          out.write "\t\t<Telephone>" + phone + "</Telephone>\n"
+          out.write "\t\t<Telephone>" + phone_number + "</Telephone>\n"
           out.write "\t</DirectoryEntry>\n"
 
          break if count == 32*(page+1)
