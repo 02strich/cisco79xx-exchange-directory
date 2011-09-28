@@ -1,3 +1,4 @@
+import os
 import suds
 from suds.transport.windows import HttpAuthenticated
 
@@ -5,7 +6,7 @@ class CustomTransport(HttpAuthenticated):
 	def open(self, request):
 		url = request.url
 		if url.endswith(".wsdl") or url.endswith(".xsd"):
-			return open(url.split('/')[-1])
+			return open(os.path.join(os.path.dirname(__file__), url.split('/')[-1]))
 		else:
 			return HttpAuthenticated.open(self, request)
 	
@@ -107,13 +108,17 @@ def yield_filtered_contacts(client, first_name=None, last_name=None):
 	else:
 		yield contacts
 
-transport = CustomTransport(username='', password='')
-client = suds.client.Client('', transport=transport)
+
+##############
+## Examples 
+##############
+#transport = CustomTransport(username='', password='')
+#client = suds.client.Client('', transport=transport)
 
 #for contact in yield_all_contacts(client):
 #for contact in yield_filtered_contacts(client, last_name="Richter"):
-for contact in yield_filtered_contacts(client, first_name="Stefan", last_name="Richter"):
-	if has_phone_numbers(contact):
-		print get_fullname(contact)
-		#for number in yield_phone_numbers(contact):
-		#	print number
+#for contact in yield_filtered_contacts(client, first_name="Stefan", last_name="Richter"):
+#	if has_phone_numbers(contact):
+#		print get_fullname(contact)
+#		for number in yield_phone_numbers(contact):
+#			print number
