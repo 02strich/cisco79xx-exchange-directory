@@ -61,6 +61,10 @@ def generate_search_xml():
 </CiscoIPPhoneInput>
 """% (app.config["SERVER_NAME"])
 
+@app.route("/")
+def root():
+	return redirect(url_for('index'))
+
 @app.route("/directory.xml")
 def index():
 	"""
