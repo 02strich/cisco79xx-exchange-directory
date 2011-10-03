@@ -88,8 +88,7 @@ def main():
 	app.client = suds.client.Client(config.EWS_URL, transport=transport)
 	
 	# start server
-	name, port = app.config['SERVER_NAME'].split(':')
-	app.run(host=name, port=int(port), request_handler=CiscoRequestHandler)
+	app.run(host=app.config['SERVER_IFACE'], port=app.config['SERVER_PORT'], request_handler=CiscoRequestHandler)
 
 if __name__ == "__main__":
 	main()

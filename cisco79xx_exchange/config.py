@@ -1,5 +1,7 @@
 DEBUG = True
-SERVER_NAME = 'localhost:8000'
+SERVER_NAME = 'localhost'
+SERVER_IFACE = '127.0.0.1'
+SERVER_PORT = 8000
 
 USER_NAME = ''
 PASSWORD = ''
