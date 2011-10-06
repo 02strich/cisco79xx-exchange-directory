@@ -45,7 +45,7 @@ def generate_search_xml():
 <CiscoIPPhoneInput>
 	<Title>Search for an entry</Title>
 	<Prompt>Enter a search keyword.</Prompt>
-	<URL>http://%s/directory.xml</URL>
+	<URL>http://%s:%d/directory.xml</URL>
 	<InputItem>
 		<DisplayName>First Name</DisplayName>
 		<QueryStringParam>first_name</QueryStringParam>
@@ -59,7 +59,7 @@ def generate_search_xml():
 		<DefaultValue></DefaultValue>
 	</InputItem>
 </CiscoIPPhoneInput>
-"""% (app.config["SERVER_NAME"])
+"""% (app.config["SERVER_NAME"], app.config["SERVER_PORT"])
 
 @app.route("/")
 def root():
